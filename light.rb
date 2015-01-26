@@ -1,17 +1,13 @@
 module TrafficLight
-
-  def self.light_state v, init
-    states  = v
-    current = 0  # current pair
+  def self.state(states, init_phase = 0)
+    current = 0       # current pair [ Label, number of ticks ]
 
     loop do
-      light_state,ticks = states[current]
-      ticks.times do
-        Fiber.yield light_state
-      end
+      label, ticks = states[current]
+      ticks.times { Fiber.yield label }
+
       current += 1
-      current = init if current == states.count
+      current = init_phase if current == states.count
     end
   end
-
 end

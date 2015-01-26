@@ -7,7 +7,6 @@ require 'board'
 require 'display'
 require 'presenter'
 
-
 # Define Data
 
 ## Traffic LightGroups index
@@ -21,30 +20,30 @@ index = {
 }
 
 MATRIX = [
- #   T CNS   PNS   CEW  PEW         # T ... Repeat for n Ticks
- # Init phase ...
- %w( 4 -*-  -**- X -*-  -**- off),
- %w( 2 -O-  STOP X -*-  -**- off-starting),
- %w( 2 --R  STOP X -*-  -**- on-ready),
- # Regular, loop
- %w( 8 --R  STOP - G--  -GO- on-east-west),
- %w( 2 --R  STOP X *--  *GO* on-stopping-east-west),
- %w( 2 --R  STOP X -O-  STOP on-stopping-east-west),
- %w( 4 --R  STOP X --R  STOP on-all-stopped),
- %w( 2 -OR  -GO- | --R  STOP on-starting-north-south),
- %w( 8 G--  -GO- | --R  STOP on-north-south),
- %w( 2 *--  *GO* X --R  STOP on-stopping-north-south),
- %w( 2 -O-  STOP X --R  STOP on-stopping-north-south),
- %w( 4 --R  STOP X --R  STOP on-all-stopped),
- %w( 2 --R  STOP - -OR  -GO- on-starting-east-west),
+  #   T CNS   PNS   CEW  PEW         # T ... Repeat for n Ticks
+  # Init phase ...
+  %w( 4 -*-  -**- X -*-  -**- off),
+  %w( 2 -O-  STOP X -*-  -**- off-starting),
+  %w( 2 --R  STOP X -*-  -**- on-ready),
+  # Regular, loop
+  %w( 8 --R  STOP - G--  -GO- on-east-west),
+  %w( 2 --R  STOP X *--  *GO* on-stopping-east-west),
+  %w( 2 --R  STOP X -O-  STOP on-stopping-east-west),
+  %w( 4 --R  STOP X --R  STOP on-all-stopped),
+  %w( 2 -OR  -GO- | --R  STOP on-starting-north-south),
+  %w( 8 G--  -GO- | --R  STOP on-north-south),
+  %w( 2 *--  *GO* X --R  STOP on-stopping-north-south),
+  %w( 2 -O-  STOP X --R  STOP on-stopping-north-south),
+  %w( 4 --R  STOP X --R  STOP on-all-stopped),
+  %w( 2 --R  STOP - -OR  -GO- on-starting-east-west)
 ]
 
 # Config
-tick     = 1_000 #ms
+tick     = 1_000 # ms
 
 # Initialize
-board    = Board.new(MATRIX,init_phase: 3)
-display = Display.new("Traffic Light, V0.1",board)
+board    = Board.new(MATRIX, init_phase: 3)
+display = Display.new('Traffic Light, V0.1', board)
 layout   = Presenter.new(display)
 
 # Run
@@ -60,13 +59,13 @@ loop do
   end
 
   case display.wait_key(tick)
-  when ?q
+  when 'q'
     break
-  when ?+
+  when '+'
     tick = (tick <= 0 ? 1 : tick) * 2
-  when ?-
+  when '-'
     tick = tick / 2 if tick > 0
-  when ?=
+  when '='
     tick = 1_000
   else
     board.tick
@@ -75,8 +74,3 @@ loop do
 end
 display.close
 puts display.title + ' terminated sucessfully'
-
-
-
-
-
