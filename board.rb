@@ -4,10 +4,10 @@ class Board
 
   attr_reader :ticks_elapsed
 
-  def initialize matrix, init_phase=0
+  def initialize matrix, options={init_phase: 0}
     @matrix =     matrix
     @num_lights = matrix.first.count - 1
-    @init_phase = init_phase
+    @init_phase = options.fetch(:init_phase) { 0 }
     @state  =     []
     @ticks_elapsed = 0
 
@@ -15,7 +15,7 @@ class Board
     @lights = []
     @num_lights.times do |light|
       @lights[light] = Fiber.new { |states, init|
-        TrafficLight.light_state( states_of_light(light),init_phase )
+        TrafficLight.light_state( states_of_light(light),@init_phase )
       }
     end
   end

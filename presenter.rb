@@ -1,4 +1,4 @@
-class Layout
+class Presenter
 
   extend Forwardable
   def_delegator :@render, :draw_lane
@@ -9,8 +9,8 @@ class Layout
   def_delegator :@render, :text_at
   def_delegator :@render, :width
 
-  def initialize renderer
-    @render = renderer
+  def initialize display
+    @render = display
   end
 
   def draw light_group, light_state

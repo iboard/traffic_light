@@ -1,14 +1,16 @@
+#!/usr/bin/env ruby -I.
+
 require 'pp'
 require 'pry'
 
 require 'board'
-require 'renderer'
-require 'layout'
+require 'display'
+require 'presenter'
 
 
 # Define Data
 
-## Traffic Light index
+## Traffic LightGroups index
 index = {
   0 => :cars_north_south,
   1 => :pedestrians_north_south,
@@ -41,23 +43,23 @@ MATRIX = [
 tick     = 1_000 #ms
 
 # Initialize
-board    = Board.new(MATRIX,3)
-renderer = Renderer.new("Traffic Light, V0.1",board)
-layout   = Layout.new(renderer)
+board    = Board.new(MATRIX,init_phase: 3)
+display = Display.new("Traffic Light, V0.1",board)
+layout   = Presenter.new(display)
 
 # Run
 board.tick
 loop do
 
   # redraw the board
-  renderer.draw do
+  display.draw do
     board.draw do |light_idx, state|
       light_group = index[light_idx]
       layout.draw light_group, state
     end
   end
 
-  case renderer.wait_key(tick)
+  case display.wait_key(tick)
   when ?q
     break
   when ?+
@@ -71,8 +73,8 @@ loop do
   end
 
 end
-renderer.close
-puts renderer.title + ' terminated sucessfully'
+display.close
+puts display.title + ' terminated sucessfully'
 
 
 

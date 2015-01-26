@@ -1,6 +1,6 @@
 require 'curses'
 
-class Renderer
+class Display
   include Curses
 
   attr_reader :state, :copyright, :title
