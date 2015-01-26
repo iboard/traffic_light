@@ -4,20 +4,14 @@ class Board
 
   attr_reader :ticks_elapsed
 
-  def initialize matrix, options={init_phase: 0}
-    @matrix =     matrix
-    @num_lights = matrix.first.count - 1
-    @init_phase = options.fetch(:init_phase) { 0 }
-    @state  =     []
+  def initialize matrix, options={}
+    @matrix        = matrix
+    @num_lights    = matrix.first.count - 1
+    @init_phase    = options.fetch(:init_phase) { 0 }
+    @state         = []
     @ticks_elapsed = 0
 
-    # instantiate fibers
-    @lights = []
-    @num_lights.times do |light|
-      @lights[light] = Fiber.new { |states, init|
-        TrafficLight.light_state( states_of_light(light),@init_phase )
-      }
-    end
+    init_fibers
   end
 
   def tick
@@ -27,13 +21,23 @@ class Board
     end
   end
 
-  def draw
+  def lights_with_index
     @lights.each_with_index do |l,idx|
-      yield(idx, @state[idx])
+      yield(@state[idx],idx)
     end
   end
 
   private
+
+  def init_fibers
+    @lights = []
+    @num_lights.times do |light|
+      @lights[light] = Fiber.new { |states, init|
+        TrafficLight.light_state( states_of_light(light),@init_phase )
+      }
+    end
+  end
+
   def states_of_light(light)
     @matrix.map do |line|
       [ line[1+light], line[0].to_i ]

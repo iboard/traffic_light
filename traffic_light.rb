@@ -53,7 +53,7 @@ loop do
 
   # redraw the board
   display.draw do
-    board.draw do |light_idx, state|
+    board.lights_with_index do |state, light_idx|
       light_group = index[light_idx]
       layout.draw light_group, state
     end
