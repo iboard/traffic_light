@@ -1,3 +1,5 @@
+require 'forwardable'
+
 class Presenter
   extend Forwardable
   def_delegator :@display, :draw_lane

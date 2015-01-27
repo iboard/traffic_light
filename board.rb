@@ -30,10 +30,12 @@ class Board
 
   def init_fibers
     @lights = []
-    light_nums do |light|
-      @lights[light] = Fiber.new do |_states, _init|
-        TrafficLight.state(states_of_light(light), @init_phase)
-      end
+    light_nums {|light| init_fiber(light) }
+  end
+
+  def init_fiber n
+    @lights[n] = Fiber.new do |_states, _init|
+      TrafficLight.state(states_of_light(n), @init_phase)
     end
   end
 
