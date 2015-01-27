@@ -1,4 +1,5 @@
 class LightColor
+
   def initialize(idx, state, mapping)
     @idx = idx
     @state = state
@@ -15,9 +16,9 @@ class LightColor
   def color_at(idx)
     case @state
     when 'STOP', /^R-|-R$/, 'on-all-stopped', 'off'
-      @state[idx] == '-' ? :cyan : :red
+      @state[idx] == '-' ? :white : :red
     when '-GO-', '*--', '--*', /^G|G$/, /on-east-west/, /on-north-south/
-      @state[idx] == '-' ? :cyan : :green
+      @state[idx] == '-' ? :white : :green
     when '*GO*', /stopping/, /starting/
       :orange
     else
