@@ -64,4 +64,8 @@ class Presenter
   def state_light(light_state)
     text_at(width - light_state.length - 2, 1, light_state)
   end
+
+  def foo_bar(light_state)
+    text_at(center - (light_state.length / 2), 5, light_state)
+  end
 end

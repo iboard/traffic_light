@@ -6,7 +6,7 @@ class Display
 
   attr_reader :state, :copyright, :title
 
-  def initialize(title, board, copyright = '©2015 by Andi Altendorfer')
+  def initialize(title, board, copyright = "©#{Time.now.year} by me")
     @state     = 'Initializing...'
     @board     = board
     @title     = title

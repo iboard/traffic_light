@@ -16,26 +16,27 @@ index = {
   2 => :center_light,
   3 => :cars_east_west,
   4 => :pedestrians_east_west,
-  5 => :state_light
+  5 => :foo_bar,
+  6 => :state_light
 }
 
 MATRIX = [
   #   T CNS   PNS   CEW  PEW         # T ... Repeat for n Ticks
   # Init phase ...
-  %w( 4 -*-  -**- X -*-  -**- off),
-  %w( 2 -O-  STOP X -*-  -**- off-starting),
-  %w( 2 --R  STOP X -*-  -**- on-ready),
+  %w( 4 -*-  -**- X -*-  -**- f off),
+  %w( 2 -O-  STOP X -*-  -**- fo off-starting),
+  %w( 2 --R  STOP X -*-  -**- foo on-ready),
   # Regular, loop
-  %w( 8 --R  STOP - G--  -GO- on-east-west),
-  %w( 2 --R  STOP X *--  *GO* on-stopping-east-west),
-  %w( 2 --R  STOP X -O-  STOP on-stopping-east-west),
-  %w( 4 --R  STOP X --R  STOP on-all-stopped),
-  %w( 2 -OR  -GO- | --R  STOP on-starting-north-south),
-  %w( 8 G--  -GO- | --R  STOP on-north-south),
-  %w( 2 *--  *GO* X --R  STOP on-stopping-north-south),
-  %w( 2 -O-  STOP X --R  STOP on-stopping-north-south),
-  %w( 4 --R  STOP X --R  STOP on-all-stopped),
-  %w( 2 --R  STOP - -OR  -GO- on-starting-east-west)
+  %w( 8 --R  STOP - G--  -GO- foob on-east-west),
+  %w( 2 --R  STOP X *--  *GO* fooba on-stopping-east-west),
+  %w( 2 --R  STOP X -O-  STOP foobar on-stopping-east-west),
+  %w( 4 --R  STOP X --R  STOP fooba on-all-stopped),
+  %w( 2 -OR  -GO- | --R  STOP foob on-starting-north-south),
+  %w( 8 G--  -GO- | --R  STOP foo on-north-south),
+  %w( 2 *--  *GO* X --R  STOP fo on-stopping-north-south),
+  %w( 2 -O-  STOP X --R  STOP f on-stopping-north-south),
+  %w( 4 --R  STOP X --R  STOP fo on-all-stopped),
+  %w( 2 --R  STOP - -OR  -GO- foo on-starting-east-west)
 ]
 
 # Config
