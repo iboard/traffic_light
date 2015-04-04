@@ -2,22 +2,27 @@ require 'curses'
 require 'light_color'
 
 class Display
-  include Curses; GW = Curses
+  include Curses
 
   attr_reader :state, :title
 
-  def initialize(title, board, copyright = COPYRIGHT)
+  def initialize(title, board, gateway=Curses, copyright = COPYRIGHT)
     @state     = 'Initializing...'
     @board     = board
     @title     = title
     @copyright = copyright
+    @gateway   = gateway
 
-    init_curses
+    init_gateway
+  end
+
+  def gw
+    @gateway
   end
 
   def wait_key(timeout = 1_000)
-    GW.timeout = timeout
-    GW.getch
+    gw.timeout = timeout
+    gw.getch
   end
 
   def draw
@@ -37,11 +42,11 @@ class Display
   end
 
   def center
-    GW.cols / 2
+    gw.cols / 2
   end
 
   def middle
-    GW.lines / 2
+    gw.lines / 2
   end
 
   def text_at(x, y, msg)
@@ -50,24 +55,24 @@ class Display
 
   def close
     win.close
-    GW.close_screen
+    gw.close_screen
   end
 
   def width
-    GW.cols
+    gw.cols
   end
 
   def height
-    GW.lines
+    gw.lines
   end
 
   def state(new_state = @state)
     def filler
-      ' ' * (GW.cols - @copyright.length - @state.length - 41)
+      ' ' * (gw.cols - @copyright.length - @state.length - 41)
     end
 
-    win.attron(color_pair(COLOR_WHITE) | GW::A_REVERSE) do
-      win.setpos GW.lines-1, 0
+    win.attron(color_pair(COLOR_WHITE) | gw::A_REVERSE) do
+      win.setpos gw.lines-1, 0
       win.addstr '%20s | %9d | %s %s' % [Time.now.to_s, ticks_elapsed, @state = new_state, filler]
     end
   end
@@ -75,7 +80,7 @@ class Display
   private
 
   def win
-    @win ||= GW::Window.new(GW.lines, GW.cols, 0, 0)
+    @win ||= gw::Window.new(gw.lines, gw.cols, 0, 0)
   end
 
   def refresh
@@ -95,22 +100,22 @@ class Display
     help
   end
 
-  def init_curses
-    GW.init_screen
-    GW.curs_set(0)
+  def init_gateway
+    gw.init_screen
+    gw.curs_set(0)
     init_color
   end
 
   def init_color
-    GW.start_color
-    GW.init_pair(COLOR_RED,    COLOR_RED,    COLOR_BLACK)
-    GW.init_pair(COLOR_GREEN,  COLOR_GREEN,  COLOR_BLACK)
-    GW.init_pair(COLOR_RED,    COLOR_RED,    COLOR_BLACK)
-    GW.init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK)
-    GW.init_pair(COLOR_BLACK,  COLOR_BLACK,  COLOR_BLACK)
-    GW.init_pair(COLOR_WHITE,  COLOR_WHITE,  COLOR_BLACK)
-    GW.init_pair(COLOR_CYAN,   COLOR_CYAN,   COLOR_BLACK)
-    GW.init_pair(COLOR_BLUE,   COLOR_BLUE,   COLOR_BLACK)
+    gw.start_color
+    gw.init_pair(COLOR_RED,    COLOR_RED,    COLOR_BLACK)
+    gw.init_pair(COLOR_GREEN,  COLOR_GREEN,  COLOR_BLACK)
+    gw.init_pair(COLOR_RED,    COLOR_RED,    COLOR_BLACK)
+    gw.init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK)
+    gw.init_pair(COLOR_BLACK,  COLOR_BLACK,  COLOR_BLACK)
+    gw.init_pair(COLOR_WHITE,  COLOR_WHITE,  COLOR_BLACK)
+    gw.init_pair(COLOR_CYAN,   COLOR_CYAN,   COLOR_BLACK)
+    gw.init_pair(COLOR_BLUE,   COLOR_BLUE,   COLOR_BLACK)
 
     @light_colors =
       {
@@ -146,7 +151,7 @@ class Display
   end
 
   def help
-    output_lines_at(GW.lines - 10, 2, <<-EOT.gsub(/^\s{6}/, ''))
+    output_lines_at(gw.lines - 10, 2, <<-EOT.gsub(/^\s{6}/, ''))
       _____________________________________
       Keys:
        + ... Double Tick length (slow down)
@@ -165,8 +170,8 @@ class Display
   end
 
   def copyright
-    win.attron(color_pair(COLOR_WHITE) | GW::A_REVERSE) do
-      win.setpos GW.lines-1, GW.cols - @copyright.length
+    win.attron(color_pair(COLOR_WHITE) | gw::A_REVERSE) do
+      win.setpos gw.lines-1, gw.cols - @copyright.length
       win.addstr @copyright
     end
     @copyright
@@ -186,7 +191,7 @@ class Display
   end
 
   def char_with_color(char,color)
-    win.attron(color_pair(color) | GW::A_NORMAL) { put_char(char) }
+    win.attron(color_pair(color) | gw::A_NORMAL) { put_char(char) }
   end
 
   def put_char(char)

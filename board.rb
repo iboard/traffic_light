@@ -1,6 +1,8 @@
 require 'light'
 
 class Board
+  class LoopTerminated < StandardError; end
+
   attr_reader :ticks_elapsed
 
   def initialize(matrix, options = {})
@@ -9,13 +11,14 @@ class Board
     @init_phase    = options.fetch(:init_phase) { 0 }
     @state         = []
     @ticks_elapsed = 0
+    @loop          = options.fetch(:loop) { true }
 
     init_fibers
   end
 
   def tick
     @ticks_elapsed += 1
-    light_nums { |light| @state[light] = @lights[light].resume }
+    light_ids { |idx| @state[idx] = @lights[idx].resume }
   end
 
   def lights_with_index
@@ -24,18 +27,18 @@ class Board
 
   private
 
-  def light_nums
+  def light_ids
     @num_lights.times { |n| yield(n) }
   end
 
   def init_fibers
     @lights = []
-    light_nums {|light| init_fiber(light) }
+    light_ids  {|light| init_fiber(light) }
   end
 
   def init_fiber n
     @lights[n] = Fiber.new do |_states, _init|
-      TrafficLight.state(states_of_light(n), @init_phase)
+      TrafficLight.state(states_of_light(n), @init_phase, @loop)
     end
   end
 

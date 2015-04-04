@@ -7,7 +7,7 @@ require 'presenter'  # Knows how to draw lanes and lights
 
 # Define Data
 
-## Traffic LightGroups index
+# Traffic LightGroups index
 light_groups = {
   0 => :cars_north_south,
   1 => :pedestrians_north_south,
@@ -80,4 +80,4 @@ loop do
 
 end
 display.close
-puts display.title + ' terminated sucessfully'
+0
