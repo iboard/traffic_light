@@ -47,7 +47,7 @@ display  = Display.new('Traffic Light, V0.1', board)
 layout   = Presenter.new(display)
 
 # Run
-board.tick # required to set a defined state for 1st display
+board.tick # required to set a defined state for initial display
 loop do
 
   # redraw the board
@@ -60,7 +60,7 @@ loop do
       #    .... 0 based index in light_groups
 
       # get the light-group name (method name to be
-      # called in layout
+      # called in layout)
       light_group = light_groups[light_idx]
 
       # Let the presenter draw the given light_group
